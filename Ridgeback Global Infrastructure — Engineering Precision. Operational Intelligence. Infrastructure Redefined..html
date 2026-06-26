@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ridgeback Global Infrastructure — Engineering Precision. Operational Intelligence. Infrastructure Redefined.</title>
+  <meta name="description" content="Ridgeback Global Infrastructure LLC — Autonomous infrastructure inspection and operational intelligence platform. East Norriton, PA." />
+  <meta property="og:title" content="Ridgeback Global Infrastructure" />
+  <meta property="og:description" content="Engineering Precision. Operational Intelligence. Infrastructure Redefined." />
+  <meta property="og:url" content="https://www.ridgebackinfra.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --slate:   #0B1220;
+      --slate2:  #111a2e;
+      --slate3:  #182035;
+      --gold:    #C8973A;
+      --gold2:   #E4B96A;
+      --gold3:   #8a6420;
+      --silver:  #8fa3b8;
+      --fog:     #4a5e72;
+      --white:   #f0f4f8;
+      --accent:  #1e3a5f;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--slate);
+      color: var(--white);
+      font-family: 'Crimson Pro', Georgia, serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── TOPOGRAPHIC BACKGROUND ── */
+    .topo-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .topo-bg svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.04;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.25rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(200,151,58,0.12);
+      background: rgba(11,18,32,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .nav-brand {
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      color: var(--gold);
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .nav-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      color: var(--silver);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+    .nav-link:hover { color: var(--gold2); }
+
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--fog);
+      text-transform: uppercase;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 4rem;
+    }
+
+    /* Mountain ridge line SVG background */
+    .hero-mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Radial glow behind logo */
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -55%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,151,58,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      animation: glow-breathe 4s ease-in-out infinite;
+    }
+    @keyframes glow-breathe {
+      0%, 100% { opacity: 0.6; transform: translate(-50%,-55%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%,-55%) scale(1.08); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      animation: fade-up 1.2s ease forwards;
+      opacity: 0;
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Logo */
+    .logo-wrap {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 2.5rem;
+      position: relative;
+    }
+    .logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 30px rgba(200,151,58,0.25));
+      animation: logo-in 1.4s ease forwards;
+      opacity: 0;
+    }
+    @keyframes logo-in {
+      0%   { opacity: 0; transform: scale(0.85); }
+      60%  { opacity: 1; transform: scale(1.03); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Divider line */
+    .hero-rule {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto 2rem;
+      animation: rule-in 1.4s 0.3s ease forwards;
+      opacity: 0;
+    }
+    @keyframes rule-in {
+      from { opacity: 0; width: 0; }
+      to   { opacity: 1; width: 80px; }
+    }
+
+    .hero-company {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      animation: fade-up 1s 0.2s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-tagline {
+      font-family: 'Crimson Pro', serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-style: italic;
+      color: var(--gold2);
+      letter-spacing: 0.04em;
+      margin-bottom: 3rem;
+      animation: fade-up 1s 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    /* Under construction badge */
+    .uc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: 1px solid rgba(200,151,58,0.3);
+      background: rgba(200,151,58,0.06);
+      padding: 0.75rem 1.75rem;
+      margin-bottom: 3rem;
+      animation: fade-up 1s 0.6s ease forwards;
+      opacity: 0;
+    }
+    .uc-badge-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .uc-icon {
+      color: var(--gold);
+      font-size: 0.85rem;
+    }
+
+    /* Pillars */
+    .pillars {
+      display: flex;
+      gap: 1px;
+      justify-content: center;
+      margin-bottom: 4rem;
+      animation: fade-up 1s 0.8s ease forwards;
+      opacity: 0;
+    }
+    .pillar {
+      padding: 1.25rem 2rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(200,151,58,0.1);
+      flex: 1;
+      max-width: 220px;
+      text-align: center;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .pillar:hover {
+      background: rgba(200,151,58,0.05);
+      border-color: rgba(200,151,58,0.25);
+    }
+    .pillar-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+    .pillar-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .pillar-desc {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      color: var(--silver);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    /* CTA */
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fade-up 1s 1s ease forwards;
+      opacity: 0;
+    }
+
+    .btn-primary {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate);
+      background: var(--gold);
+      border: none;
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover {
+      background: var(--gold2);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: transparent;
+      border: 1px solid rgba(200,151,58,0.4);
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.25s, color 0.25s, transform 0.2s;
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      color: var(--gold2);
+      transform: translateY(-1px);
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 3rem;
+      margin: 0 auto;
+      max-width: 1100px;
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,151,58,0.2), transparent);
+    }
+    .divider-mark {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--gold3);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── ABOUT SECTION ── */
+    .about {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .section-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-body {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.1rem;
+      color: var(--silver);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Capabilities list */
+    .cap-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .cap-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      font-family: 'Crimson Pro', serif;
+      font-size: 1rem;
+      color: var(--silver);
+      line-height: 1.5;
+    }
+    .cap-list li::before {
+      content: '◆';
+      color: var(--gold);
+      font-size: 0.55rem;
+      margin-top: 0.45rem;
+      flex-shrink: 0;
+    }
+
+    /* Stat cards */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin-top: 2rem;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(200,151,58,0.1);
+      padding: 1.5rem;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .stat-card:hover { background: rgba(200,151,58,0.04); }
+    .stat-num {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--fog);
+      text-transform: uppercase;
+    }
+
+    /* ── PLATFORM SECTION ── */
+    .platform {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem;
+      background: rgba(255,255,255,0.015);
+      border-top: 1px solid rgba(200,151,58,0.08);
+      border-bottom: 1px solid rgba(200,151,58,0.08);
+    }
+
+    .platform-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .platform-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .layer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+    }
+
+    .layer-card {
+      background: rgba(11,18,32,0.6);
+      border: 1px solid rgba(200,151,58,0.08);
+      padding: 1.75rem 1.5rem;
+      transition: border-color 0.3s, background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .layer-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 0;
+      background: var(--gold);
+      transition: height 0.4s ease;
+    }
+    .layer-card:hover { border-color: rgba(200,151,58,0.2); background: rgba(200,151,58,0.03); }
+    .layer-card:hover::before { height: 100%; }
+
+    .layer-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--gold3);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .layer-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .layer-desc {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      color: var(--fog);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ── CONTACT SECTION ── */
+    .contact {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 3rem;
+    }
+
+    .contact-card {
+      border: 1px solid rgba(200,151,58,0.1);
+      padding: 2rem 1.5rem;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .contact-card:hover {
+      border-color: rgba(200,151,58,0.25);
+      background: rgba(200,151,58,0.04);
+    }
+    .contact-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .contact-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .contact-value {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1rem;
+      color: var(--silver);
+      text-decoration: none;
+      line-height: 1.6;
+      display: block;
+      transition: color 0.25s;
+    }
+    a.contact-value:hover { color: var(--gold2); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(200,151,58,0.1);
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-left {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--fog);
+      text-transform: uppercase;
+    }
+
+    .footer-right {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--fog);
+    }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 2;
+      animation: fade-up 1s 1.5s ease forwards;
+      opacity: 0;
+    }
+    .scroll-hint span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: var(--fog);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scroll-drop 1.5s ease-in-out infinite;
+    }
+    @keyframes scroll-drop {
+      0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+      50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-right { gap: 1.25rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .layer-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .pillars { flex-direction: column; align-items: center; }
+      .pillar { max-width: 100%; width: 100%; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    /* ── CORNER MARKS ── */
+    .corner-mark {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-color: rgba(200,151,58,0.3);
+      border-style: solid;
+    }
+    .corner-tl { top: 0; left: 0; border-width: 1px 0 0 1px; }
+    .corner-tr { top: 0; right: 0; border-width: 1px 1px 0 0; }
+    .corner-bl { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+    .corner-br { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Topographic background -->
+  <div class="topo-bg">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,600 C200,560 300,520 500,540 C700,560 800,480 1000,500 C1200,520 1300,560 1440,540 L1440,900 L0,900 Z" fill="none" stroke="#C8973A" stroke-width="0.5"/>
+      <path d="M0,650 C200,610 400,580 600,600 C800,620 900,550 1100,570 C1300,590 1380,620 1440,610 L1440,900 L0,900 Z" fill="none" stroke="#C8973A" stroke-width="0.5"/>
+      <path d="M0,700 C150,680 350,650 550,665 C750,680 950,620 1150,640 C1300,655 1380,675 1440,670 L1440,900 L0,900 Z" fill="none" stroke="#C8973A" stroke-width="0.5"/>
+      <path d="M0,750 C180,735 400,710 600,725 C800,740 980,690 1180,705 C1320,716 1400,730 1440,728 L1440,900 L0,900 Z" fill="none" stroke="#C8973A" stroke-width="0.5"/>
+      <path d="M0,450 C250,410 450,430 650,400 C850,370 1050,400 1250,380 C1350,370 1400,385 1440,380 L1440,0 L0,0 Z" fill="none" stroke="#C8973A" stroke-width="0.3"/>
+      <path d="M0,400 C300,370 500,395 700,360 C900,325 1050,350 1250,330 C1360,318 1410,328 1440,325" fill="none" stroke="#C8973A" stroke-width="0.3"/>
+      <path d="M0,350 C250,325 500,355 700,320 C900,285 1100,305 1300,285 C1380,275 1420,280 1440,278" fill="none" stroke="#C8973A" stroke-width="0.3"/>
+    </svg>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="/" class="nav-brand">RGI</a>
+    <div class="nav-right">
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span>Platform Online</span>
+      </div>
+      <a href="mailto:nanderson@ridgebackinfra.com" class="nav-link">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+
+    <div class="hero-content">
+      <div class="logo-wrap">
+        <img src="RB_Logo.png" alt="Ridgeback Global Infrastructure" />
+      </div>
+
+      <div class="hero-rule"></div>
+
+      <h1 class="hero-company">Ridgeback Global Infrastructure</h1>
+      <p class="hero-tagline">Engineering Precision. Operational Intelligence. Infrastructure Redefined.</p>
+
+      <div class="uc-badge">
+        <span class="uc-icon">◈</span>
+        <span class="uc-badge-text">Platform Deployment Underway — Full Launch 2026</span>
+        <span class="uc-icon">◈</span>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar">
+          <span class="pillar-icon">🛸</span>
+          <span class="pillar-label">Autonomous Ops</span>
+          <span class="pillar-desc">Multi-domain drone fleet coordination</span>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">⚙️</span>
+          <span class="pillar-label">AI Orchestration</span>
+          <span class="pillar-desc">17-layer agentic operating system</span>
+        </div>
+        <div class="pillar">
+          <span class="pillar-icon">🛡️</span>
+          <span class="pillar-label">Governance</span>
+          <span class="pillar-desc">FAA · EPA · OSHA · NFPA compliant</span>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="mailto:nanderson@ridgebackinfra.com" class="btn-primary">Request Briefing</a>
+        <a href="#platform" class="btn-ghost">View Platform</a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Explore</span>
+      <div class="scroll-line"></div>
+    </div>
+
+    <!-- Mountain silhouette -->
+    <div class="hero-mountains">
+      <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <path d="M0,220 L0,160 L120,80 L240,130 L360,40 L480,100 L560,20 L640,90 L720,30 L800,95 L880,15 L960,80 L1080,45 L1200,110 L1320,70 L1440,120 L1440,220 Z"
+              fill="rgba(11,18,32,0.6)" stroke="rgba(200,151,58,0.15)" stroke-width="1"/>
+        <path d="M0,220 L0,180 L180,130 L300,150 L440,100 L520,130 L620,80 L720,120 L820,75 L940,115 L1060,85 L1180,125 L1300,100 L1440,140 L1440,220 Z"
+              fill="rgba(11,18,32,0.8)" stroke="rgba(200,151,58,0.08)" stroke-width="0.5"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div>
+        <div class="section-eyebrow">The Platform</div>
+        <h2 class="section-title">The Operating System for Autonomous Infrastructure</h2>
+        <p class="section-body">
+          Ridgeback Orchestrator is a simulation-capable, self-healing agentic OS — built from the ground up to coordinate autonomous field operations across regulated industries.
+        </p>
+        <p class="section-body">
+          From landfill environmental monitoring to bridge and dam inspection, wildfire detection to utility corridor surveys — Ridgeback translates commander intent into validated, auditable, multi-domain machine execution.
+        </p>
+        <p class="section-body">
+          Built in East Norriton, PA. Designed for the world.
+        </p>
+      </div>
+
+      <div>
+        <div class="section-eyebrow">Capabilities</div>
+        <ul class="cap-list">
+          <li>Natural-language intent to autonomous mission execution</li>
+          <li>Multi-branch simulation before any asset moves</li>
+          <li>Vehicle-agnostic command layer — air, ground, maritime</li>
+          <li>Self-healing runtime with global watchdog monitoring</li>
+          <li>Full Langfuse observability on every agent decision</li>
+          <li>Blockchain-anchored immutable audit trail</li>
+          <li>FAA, EPA, OSHA, NFPA, DOT regulatory compliance built-in</li>
+          <li>Red team / Blue team adversarial safety validation</li>
+        </ul>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <span class="stat-num">17</span>
+            <span class="stat-label">OS Layers</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">40+</span>
+            <span class="stat-label">AI Agents</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">6</span>
+            <span class="stat-label">Regulators Covered</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">∞</span>
+            <span class="stat-label">Mission Futures Simulated</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"><span class="divider-mark">Platform Architecture</span></div>
+
+  <!-- Platform Layers -->
+  <section class="platform" id="platform">
+    <div class="platform-inner">
+      <div class="platform-header">
+        <div class="section-eyebrow" style="justify-content:center;">Ridgeback OS</div>
+        <h2 class="section-title">17-Layer Autonomous Operating System</h2>
+      </div>
+
+      <div class="layer-grid">
+        <div class="layer-card">
+          <span class="layer-num">LAYER 01–03</span>
+          <span class="layer-name">Data Foundation</span>
+          <span class="layer-desc">Ingestion · Pipeline · Mission Graph — raw sensor intake through structured dependency resolution</span>
+        </div>
+        <div class="layer-card">
+          <span class="layer-num">LAYER 04–06</span>
+          <span class="layer-name">Validation & Execution</span>
+          <span class="layer-desc">Graphability · Validation · Execution — schema enforcement through autonomous action</span>
+        </div>
+        <div class="layer-card">
+          <span class="layer-num">LAYER 07–09</span>
+          <span class="layer-name">Runtime Intelligence</span>
+          <span class="layer-desc">Live orchestration · System intelligence · Continuous health monitoring</span>
+        </div>
+        <div class="layer-card">
+          <span class="layer-num">LAYER 10–12</span>
+          <span class="layer-name">Observability</span>
+          <span class="layer-desc">Event bus · Meta-operations · Full Langfuse telemetry on every agent trace</span>
+        </div>
+        <div class="layer-card">
+          <span class="layer-num">LAYER 13–14</span>
+          <span class="layer-name">Resilience & Governance</span>
+          <span class="layer-desc">Mission continuity · Regulatory policy enforcement across FAA, EPA, OSHA, NFPA</span>
+        </div>
+        <div class="layer-card">
+          <span class="layer-num">LAYER 15–17</span>
+          <span class="layer-name">Synthetic Intelligence</span>
+          <span class="layer-desc">Autonomy · Self-healing · Intelligence fusion — simulation-driven decision making</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"><span class="divider-mark">Get In Touch</span></div>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="section-eyebrow" style="justify-content:center;">Contact</div>
+    <h2 class="section-title">Ready to Redefine Infrastructure</h2>
+    <p class="section-body" style="max-width:560px;margin:0 auto;">
+      Whether you're a potential customer, investor, or government partner — we want to hear from you.
+    </p>
+
+    <div class="contact-grid">
+      <div class="contact-card" style="position:relative;">
+        <div class="corner-mark corner-tl"></div>
+        <div class="corner-mark corner-tr"></div>
+        <div class="corner-mark corner-bl"></div>
+        <div class="corner-mark corner-br"></div>
+        <span class="contact-icon">📍</span>
+        <span class="contact-label">Address</span>
+        <span class="contact-value">3336 E Hayes Rd<br/>East Norriton, PA 19403<br/>United States</span>
+      </div>
+      <div class="contact-card" style="position:relative;">
+        <div class="corner-mark corner-tl"></div>
+        <div class="corner-mark corner-tr"></div>
+        <div class="corner-mark corner-bl"></div>
+        <div class="corner-mark corner-br"></div>
+        <span class="contact-icon">✉️</span>
+        <span class="contact-label">Email</span>
+        <a href="mailto:nanderson@ridgebackinfra.com" class="contact-value">nanderson@ridgebackinfra.com</a>
+      </div>
+      <div class="contact-card" style="position:relative;">
+        <div class="corner-mark corner-tl"></div>
+        <div class="corner-mark corner-tr"></div>
+        <div class="corner-mark corner-bl"></div>
+        <div class="corner-mark corner-br"></div>
+        <span class="contact-icon">🌐</span>
+        <span class="contact-label">Web</span>
+        <a href="https://www.ridgebackinfra.com" class="contact-value">www.ridgebackinfra.com</a>
+        <span class="contact-value" style="margin-top:0.5rem;font-size:0.85rem;color:var(--fog);">UEI: GX8AWX98MZ45</span>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;">
+      <a href="mailto:nanderson@ridgebackinfra.com" class="btn-primary">Request a Platform Briefing</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-left">
+      © 2026 Ridgeback Global Infrastructure LLC · East Norriton, PA · All Rights Reserved
+    </div>
+    <div class="footer-right">
+      Engineering Precision. Operational Intelligence. Infrastructure Redefined.
+    </div>
+  </footer>
+
+</body>
+</html>
